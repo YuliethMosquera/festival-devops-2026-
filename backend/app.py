@@ -88,7 +88,7 @@ def get_festival_data():
     conn.close()
     
     return jsonify({
-        "name": info["name"] if info else "Pacific DevOps Music Fest",
+        "name": info["name"] if info else "Pacific DevOps Music Fest 2026",
         "date": info["event_date"] if info else "Por confirmar",
         "artists": artists_list
     })
