@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Servicio de Base de Datos (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: festival_db_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_root_pass
+      MYSQL_DATABASE: festival_db
+      MYSQL_USER: devops_user
+      MYSQL_PASSWORD: devops_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend_net
+    expose:
+      - "3306"
+
+  # Servicio del Backend (Flask API)
+  backend:
+    build: ./backend
+    container_name: festival_backend_container
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_USER: devops_user
+      DB_PASSWORD: devops_password
+      DB_NAME: festival_db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - backend_net
+      - frontend_net
+
+  # Servicio del Frontend (Nginx)
+  frontend:
+    build: ./frontend
+    container_name: festival_frontend_container
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - frontend_net
+    depends_on:
+      - backend
+
+# Definición de Volúmenes para Persistencia
+volumes:
+  db_data:
+    driver: local
+
+# Definición de Redes para Aislamiento de Capas
+networks:
+  frontend_net:
+    driver: bridge
+  backend_net:
+    driver: bridge

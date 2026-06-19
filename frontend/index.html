@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacific DevOps Music Fest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="fest-name">Pacific DevOps Music Fest</h1>
+            <p class="date" id="fest-date">Cargando fecha...</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="lineup-section">
+            <h2>Lineup Oficial</h2>
+            <ul id="artist-list" class="artist-grid">
+                <li>Cargando artistas...</li>
+            </ul>
+        </section>
+
+        <section class="ticket-section">
+            <button class="btn-ticket" onclick="buyTicket()">Comprar Tickets</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Pacific DevOps Music Fest. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Consumir la API del Backend de Flask
+        // Usamos la ruta relativa que resolverá Nginx o el puerto directo del backend
+        fetch('http://localhost:5000/api/festival')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('fest-name').innerText = data.name;
+                document.getElementById('fest-date').innerText = `📅 ${data.date}`;
+                
+                const artistList = document.getElementById('artist-list');
+                artistList.innerHTML = '';
+                data.artists.forEach(artist => {
+                    const li = document.createElement('li');
+                    li.className = 'artist-card';
+                    li.innerText = artist;
+                    artistList.appendChild(li);
+                });
+            })
+            .catch(err => {
+                console.error("Error cargando el lineup:", err);
+                document.getElementById('artist-list').innerHTML = "<li>Error al conectar con el backend</li>";
+            });
+
+        function buyTicket() {
+            alert('¡Redireccionando a la pasarela de pagos segura!');
+        }
+    </script>
+</body>
+</html>
