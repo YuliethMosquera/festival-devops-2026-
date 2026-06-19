@@ -2,7 +2,9 @@ name: Validación del Proyecto
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
+  
 
 jobs:
   validar:
