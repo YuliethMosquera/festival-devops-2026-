@@ -1,0 +1,23 @@
+name: Validación del Proyecto
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Validar archivos requeridos
+        run: |
+          test -f frontend/index.html || (echo "❌ Falta frontend/index.html" && exit 1)
+          test -f frontend/css/style.css || (echo "❌ Falta frontend/css/style.css" && exit 1)
+          test -f backend/js/script.js || (echo "❌ Falta backend/js/script.js" && exit 1)
+          test -f README.md || (echo "❌ Falta README.md" && exit 1)
+
+      - name: Confirmar validación
+        run: echo "✅ Todos los archivos requeridos existen."
